@@ -1,0 +1,47 @@
+<?php
+
+require_once 'vendor/autoload.php';
+
+// Use the Slim framework
+$app = new \Slim\App();
+
+// Set up a route for user registration
+$app->post('/register', function ($request, $response) {
+  // Get the POST data from the request
+  $data = $request->getParsedBody();
+
+  
+  $email = $data['email'];
+  $phone = $data['phone'];
+  $password = $data['password'];
+  $confirm_password = $data['confirm_password'];
+
+  
+  $errors = array();
+  if (empty($email)) {
+    $errors[] = 'Email is required';
+  }
+  if (empty($phone)) {
+    $errors[] = 'Phone is required';
+  }
+  if (empty($password)) {
+    $errors[] = 'Password is required';
+  }
+  if ($password !== $confirm_password) {
+    $errors[] = 'Passwords do not match';
+  }
+
+  
+  if (count($errors) > 0) {
+    return $response->withStatus(400)->withJson(array('errors' => $errors));
+  }
+
+  
+  // (e.g. store the user in a database, send a confirmation email, etc.)
+
+  
+  return $response->withStatus(200)->withJson(array('message' => 'Registration successful'));
+});
+
+// Run the Slim app
+$app->run();
